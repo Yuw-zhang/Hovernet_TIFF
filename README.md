@@ -2,6 +2,10 @@
 
 A multiple branch network that performs nuclear instance segmentation and classification within a single network. The network leverages the horizontal and vertical distances of nuclear pixels to their centres of mass to separate clustered cells. A dedicated up-sampling branch is used to classify the nuclear type for each segmented instance. <br />
 
+## Modification in this Fork
+- Replaced OpenSlide with TiffSlide to support TIFF WSIs.
+- Updated the environment dependencies to support TIFF.
+
 [Link](https://www.sciencedirect.com/science/article/abs/pii/S1361841519301045?via%3Dihub) to Medical Image Analysis paper. <br />
 
 This is the official PyTorch implementation of HoVer-Net. For the original TensorFlow version of this code, please refer to [this branch](https://github.com/vqdang/hover_net/tree/tensorflow-final). The repository can be used for training HoVer-Net and to process image tiles or whole-slide images. As part of this repository, we supply model weights trained on the following datasets:
@@ -20,11 +24,11 @@ Links to the checkpoints can be found in the inference description below.
 
 ```
 conda env create -f environment.yml
-conda activate hovernet
-pip install torch==1.6.0 torchvision==0.7.0
+conda activate hovernetTIFF
+pip install torch==1.9.0 torchvision==0.10.0
 ```
 
-Above, we install PyTorch version 1.6 with CUDA 10.2. 
+Above, we install PyTorch version 1.9 with CUDA 10.2. 
 
 ## Repository Structure
 
@@ -266,7 +270,4 @@ BibTex entry: <br />
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
 
-Note that the PanNuke dataset is licensed under [Attribution-NonCommercial-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/), therefore the derived weights for HoVer-Net are also shared under the same license. Please consider the implications of using the weights under this license on your work and it's licensing. 
-
-
-
+Note that the PanNuke dataset is licensed under [Attribution-NonCommercial-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/),
