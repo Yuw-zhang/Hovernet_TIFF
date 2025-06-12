@@ -6,7 +6,7 @@ from skimage import color
 import re
 import subprocess
 
-import openslide
+import tiffslide
 
 
 class FileHandler(object):
@@ -105,7 +105,7 @@ class OpenSlideHandler(FileHandler):
     def __init__(self, file_path):
         """file_path (string): path to single whole-slide image."""
         super().__init__()
-        self.file_ptr = openslide.OpenSlide(file_path)  # load OpenSlide object
+        self.file_ptr = tiffslide.OpenSlide(file_path)  # load OpenSlide object
         self.metadata = self.__load_metadata()
 
         # only used for cases where the read magnification is different from
@@ -116,22 +116,22 @@ class OpenSlideHandler(FileHandler):
         metadata = {}
 
         wsi_properties = self.file_ptr.properties
-        level_0_magnification = wsi_properties[openslide.PROPERTY_NAME_OBJECTIVE_POWER]
-        level_0_magnification = float(level_0_magnification)
+        # Need to set up magnification manually
+        level_0_magnification = float(40)
 
         downsample_level = self.file_ptr.level_downsamples
         magnification_level = [level_0_magnification / lv for lv in downsample_level]
 
         mpp = [
-            wsi_properties[openslide.PROPERTY_NAME_MPP_X],
-            wsi_properties[openslide.PROPERTY_NAME_MPP_Y],
+            wsi_properties[tiffslide.PROPERTY_NAME_MPP_X],
+            wsi_properties[tiffslide.PROPERTY_NAME_MPP_Y],
         ]
         mpp = np.array(mpp)
 
         metadata = [
             ("available_mag", magnification_level),  # highest to lowest mag
             ("base_mag", magnification_level[0]),
-            ("vendor", wsi_properties[openslide.PROPERTY_NAME_VENDOR]),
+            ("vendor", wsi_properties[tiffslide.PROPERTY_NAME_VENDOR]),
             ("mpp  ", mpp),
             ("base_shape", np.array(self.file_ptr.dimensions)),
         ]
