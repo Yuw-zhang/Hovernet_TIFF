@@ -1,6 +1,10 @@
 import uuid
 from typing import List
 import json
+import os
+
+f_dir = '/Users/yuw/Documents/Colon_segmentation/UA003/json'
+out_dir = '/Users/yuw/Documents/Colon_segmentation/UA003/geojson'
 
 # Type mapping for QuPath-style annotation
 TYPE_NUCLEI_DICT = {
@@ -75,14 +79,17 @@ def convert_hovernet_to_geojson(json_data, polygons=True) -> List[dict]:
 
 # Example usage:
 if __name__ == "__main__":
-    with open("M023_US16/hovernet_output/Image_02_M023_40X_C24.json") as f:
-        hovernet_json = json.load(f)
+    os.makedirs(out_dir, exist_ok=True)
+    for i in os.listdir(f_dir):
+        jsonFile = os.path.join(f_dir, i)
+        with open(jsonFile) as f:
+            hovernet_json = json.load(f)
 
-    geojson_obj = {
-        "type": "FeatureCollection",
-        "features": convert_hovernet_to_geojson(hovernet_json, polygons=True)  # or False for centroids
-    }
+        geojson_obj = {
+            "type": "FeatureCollection",
+            "features": convert_hovernet_to_geojson(hovernet_json, polygons=True)  # or False for centroids
+        }
 
-    with open("hovernet_C24.geojson", "w") as f:
-        json.dump(geojson_obj, f, indent=2)
+        with open(os.path.join(out_dir, i), "w") as f:
+            json.dump(geojson_obj, f, indent=2)
 
